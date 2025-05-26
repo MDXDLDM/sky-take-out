@@ -100,4 +100,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new PageResult(total,employees);
     }
 
+    /**
+     * 启用禁用员工账号
+     * @param status
+     * @param id
+     */
+    public void startOrBan(Integer status, Long id) {
+        //使得update方法可以被复用，而不是修改什么就新建一个方法
+        Employee employee = Employee.builder().status(status).id(id).build();
+        employeeMapper.update(employee);
+    }
+
 }
