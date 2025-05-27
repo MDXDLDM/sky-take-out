@@ -2,12 +2,15 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetmealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -26,6 +29,9 @@ public class DishServiceImpl implements DishService {
 
     @Autowired
     private DishFlavorMapper dishFlavorMapper;
+
+    @Autowired
+    private SetmealDishMapper setmealDishMapper;
     /**
      * 增加菜品
      * @param dishDTO
@@ -59,13 +65,67 @@ public class DishServiceImpl implements DishService {
      * 批量删除菜品
      * @param ids
      */
-    public void deleteAll(String ids) {
-        String[] Ids = ids.split(",");
-        Integer[] idsInt=new Integer[Ids.length];
-        for(int i=0;i<Ids.length;i++){
-            idsInt[i]=Integer.parseInt(Ids[i]);
+    @Transactional
+    public void deleteAll(Long[] ids) {
+        //如果在售则不能删除
+        for (Long id : ids) {
+            Dish dish=dishMapper.getById(id);
+            if (dish.getStatus()==1){
+                throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
+            }
         }
-        dishMapper.delete(idsInt);
-        dishFlavorMapper.delete(idsInt);
+        //如果有与套餐关联的则不能删除
+        Long counts=setmealDishMapper.getByDishIds(ids);
+        if (counts!=0L){
+            throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
+        }
+        dishMapper.delete(ids);
+        dishFlavorMapper.deleteByDishIds(ids);
     }
+
+    /**
+     * 修改菜品
+     * @param dishDTO
+     */
+    @Transactional
+    public void update(DishDTO dishDTO) {
+        Dish dish=new Dish();
+        BeanUtils.copyProperties(dishDTO, dish);
+        dishMapper.update(dish);
+        List<DishFlavor> flavors=dishDTO.getFlavors();
+        if (flavors!=null && !flavors.isEmpty()) {
+            Long id=dishDTO.getId();
+            Long[] ids=new Long[]{id};
+            dishFlavorMapper.deleteByDishIds(ids);
+            flavors.forEach(dishflavor -> dishflavor.setDishId(id));
+            dishFlavorMapper.insertAll(flavors);
+        }
+    }
+
+    /**
+     * 根据id查询菜品
+     * @param id
+     * @return
+     */
+    public DishVO getById(String id) {
+        Long dishId=Long.parseLong(id);
+        Dish dish=dishMapper.getById(dishId);
+        DishVO dishVO=new DishVO();
+        BeanUtils.copyProperties(dish,dishVO);
+        List<DishFlavor> flavors=dishFlavorMapper.getById(dishId);
+        dishVO.setFlavors(flavors);
+        return dishVO;
+    }
+
+    /**
+     * 起售禁售才菜品
+     * @param status
+     * @param id
+     */
+    public void changeStatus(String status, String id) {
+        Integer dishStatus=Integer.parseInt(status);
+        Long dishId=Long.parseLong(id);
+        dishMapper.changeStatus(dishStatus,dishId);
+    }
+
 }
