@@ -15,4 +15,9 @@ public interface DishFlavorMapper {
      */
     void insertAll(List<DishFlavor> flavors);
 
+    /**
+     *
+     * @param ids
+     */
+    void delete(Integer[] ids);
 }

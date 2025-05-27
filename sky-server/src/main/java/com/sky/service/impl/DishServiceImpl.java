@@ -54,4 +54,18 @@ public class DishServiceImpl implements DishService {
         PageResult pageResult=new PageResult(page.getTotal(),page.getResult());
         return pageResult;
     }
+
+    /**
+     * 批量删除菜品
+     * @param ids
+     */
+    public void deleteAll(String ids) {
+        String[] Ids = ids.split(",");
+        Integer[] idsInt=new Integer[Ids.length];
+        for(int i=0;i<Ids.length;i++){
+            idsInt[i]=Integer.parseInt(Ids[i]);
+        }
+        dishMapper.delete(idsInt);
+        dishFlavorMapper.delete(idsInt);
+    }
 }
