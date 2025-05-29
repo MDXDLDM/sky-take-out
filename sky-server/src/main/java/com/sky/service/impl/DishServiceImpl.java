@@ -125,7 +125,18 @@ public class DishServiceImpl implements DishService {
     public void changeStatus(String status, String id) {
         Integer dishStatus=Integer.parseInt(status);
         Long dishId=Long.parseLong(id);
-        dishMapper.changeStatus(dishStatus,dishId);
+        Dish dish=Dish.builder().status(dishStatus).id(dishId).build();
+        dishMapper.update(dish);
+    }
+
+    /**
+     * 根据分类id查询菜品
+     * @param categoryId
+     */
+    public List<Dish> getDishByCategoryId(String categoryId) {
+        Long Id=Long.parseLong(categoryId);
+        List<Dish> dishes=dishMapper.getDishByCategoryId(Id);
+        return dishes;
     }
 
 }

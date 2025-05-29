@@ -21,7 +21,7 @@
                 and d.status = #{status}
             </if>
         </where>
-        order by d.update_time desc
+        order by d.id asc
     </select>
 
     <delete id="delete">
@@ -61,4 +61,12 @@
         </set>
         where id=#{id}
     </update>
+
+    <select id="getDishByCategoryId" resultType="com.sky.entity.Dish">
+        select * from dish where category_id=#{id}
+    </select>
+
+    <select id="getDishCountsBySetmealId" resultType="java.lang.Long">
+        select count(*) from dish d left join setmeal_dish sd on d.id = sd.dish_id where sd.setmeal_id=#{setmealId} and d.status=0
+    </select>
 </mapper>

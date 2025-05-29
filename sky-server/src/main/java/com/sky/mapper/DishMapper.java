@@ -11,6 +11,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
+
 @Mapper
 public interface DishMapper {
 
@@ -46,6 +48,7 @@ public interface DishMapper {
      * 修改菜品
      * @param dish
      */
+    @AutoFill(OperationType.UPDATE)
     void update(Dish dish);
 
     /**
@@ -61,6 +64,21 @@ public interface DishMapper {
      * @param dishStatus
      * @param dishId
      */
-    @Update("update dish set status=#{dishStatus} where id=#{dishId}")
-    void changeStatus(Integer dishStatus, Long dishId);
+//    @Update("update dish set status=#{dishStatus} where id=#{dishId}")
+//    @AutoFill(OperationType.UPDATE)
+//    void changeStatus(Integer dishStatus, Long dishId);
+
+    /**
+     * 根据分类id查询菜品
+     * @param id
+     * @return
+     */
+    List<Dish> getDishByCategoryId(Long id);
+
+    /**
+     * 根据套餐id查询起售总数
+     * @param setmealId
+     * @return
+     */
+    Long getDishCountsBySetmealId(Long setmealId);
 }
