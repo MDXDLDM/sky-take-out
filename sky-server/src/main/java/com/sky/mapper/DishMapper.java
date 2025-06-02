@@ -81,4 +81,12 @@ public interface DishMapper {
      * @return
      */
     Long getDishCountsBySetmealId(Long setmealId);
+
+    /**
+     *
+     * @param categoryId
+     * @return
+     */
+
+    List<Dish> list(Long categoryId);
 }
