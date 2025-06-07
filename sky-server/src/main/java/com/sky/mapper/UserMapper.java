@@ -12,4 +12,7 @@ public interface UserMapper {
     public User getUserByOpenId(String id);
 
     public void insertUser(User user);
+
+    @Select("select * from user where id=#{id}")
+    public User getById(Long id);
 }
