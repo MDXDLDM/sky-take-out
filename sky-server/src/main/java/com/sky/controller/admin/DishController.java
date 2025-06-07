@@ -39,6 +39,7 @@ public class DishController {
     public Result add(@RequestBody DishDTO dishDTO){
         log.info("增加菜品:{}",dishDTO);
         dishService.add(dishDTO);
+        cleanCache(PATTERN);
         return Result.success();
     }
 
@@ -64,8 +65,8 @@ public class DishController {
     @ApiOperation("批量删除菜品")
     public Result deleteAll(@RequestParam Long[] ids){
         log.info("批量删除菜品:{}",ids);
-        cleanCache(PATTERN);
         dishService.deleteAll(ids);
+        cleanCache(PATTERN);
         return Result.success();
     }
 
@@ -78,8 +79,8 @@ public class DishController {
     @ApiOperation("修改菜品")
     public Result update(@RequestBody DishDTO dishDTO){
         log.info("修改菜品:{}",dishDTO);
-        cleanCache(PATTERN);
         dishService.update(dishDTO);
+        cleanCache(PATTERN);
         return Result.success();
     }
 
@@ -105,8 +106,8 @@ public class DishController {
     @ApiOperation("起售禁售菜品")
     public Result chageStatus(@PathVariable String status,String id){
         log.info("起售禁售菜品:{},{}",id,status);
-        cleanCache(PATTERN);
         dishService.changeStatus(status,id);
+        cleanCache(PATTERN);
         return Result.success();
     }
 

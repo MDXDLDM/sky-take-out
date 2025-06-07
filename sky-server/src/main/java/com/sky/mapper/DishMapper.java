@@ -84,9 +84,9 @@ public interface DishMapper {
 
     /**
      *
-     * @param categoryId
+     * @param dish
      * @return
      */
 
-    List<Dish> list(Long categoryId);
+    List<Dish> list(Dish dish);
 }

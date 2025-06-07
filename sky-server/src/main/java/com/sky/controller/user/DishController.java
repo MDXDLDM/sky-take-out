@@ -43,7 +43,8 @@ public class DishController {
         //添加到缓存
         Dish dish = new Dish();
         dish.setCategoryId(categoryId);
-        dish.setStatus(StatusConstant.ENABLE);//查询起售中的菜品
+        dish.setStatus(StatusConstant.ENABLE);
+        //封装为一个对象是因为只查询起售中的菜品
         list = dishService.listWithFlavor(dish);
         redisTemplate.opsForValue().set(key,list);
         return Result.success(list);
