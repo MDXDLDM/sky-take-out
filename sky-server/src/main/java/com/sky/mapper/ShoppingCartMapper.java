@@ -43,4 +43,10 @@ public interface ShoppingCartMapper {
      * @param shoppingCart
      */
     void delete(ShoppingCart shoppingCart);
+
+    /**
+     *
+     * @param cartList
+     */
+    void insertAll(List<ShoppingCart> cartList);
 }
