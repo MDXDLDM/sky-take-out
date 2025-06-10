@@ -73,4 +73,12 @@
     <select id="list"  parameterType="com.sky.entity.Dish" resultType="com.sky.entity.Dish">
         select * from dish where category_id=#{categoryId} and status=#{status}
     </select>
+
+    <select id="countByMap" resultType="java.lang.Integer">
+        select count(id) from dish
+        <where>
+            <if test="status != null"> and status = #{status} </if>
+            <if test="categoryId != null"> and category_id = #{categoryId} </if>
+        </where>
+    </select>
 </mapper>

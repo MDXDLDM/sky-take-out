@@ -79,4 +79,7 @@ public interface OrderMapper {
     //List<Orders> getByDates(LocalDateTime begin, LocalDateTime end);
 
     List<GoodsSalesDTO> getTop10(LocalDateTime timeStart, LocalDateTime timeEnd, Integer status);
+
+    @Select("select count(*) from orders")
+    Integer getCounts();
 }
