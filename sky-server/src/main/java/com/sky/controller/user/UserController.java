@@ -33,4 +33,10 @@ public class UserController {
         UserLoginVO userLoginVO = userService.login(userLoginDTO);
         return Result.success(userLoginVO);
     }
+    @PostMapping("/logout")
+    @ApiOperation("用户登出")
+    public Result logout(){
+        log.info("用户退出");
+        return Result.success();
+    }
 }
