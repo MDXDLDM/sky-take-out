@@ -52,4 +52,30 @@
         order by order_time desc
     </select>
 
+    <select id="getCountByDate" resultType="java.lang.Integer">
+        select count(*) from orders
+        <where>
+            <if test="status!=null">
+                and status=#{status}
+            </if>
+            <if test="timeStart!=null">
+                and order_time &gt; #{timeStart}
+            </if>
+            <if test="timeEnd!=null">
+                and order_time &lt;#{timeEnd}
+            </if>
+        </where>
+    </select>
+
+    <select id="getTop10" resultType="com.sky.dto.GoodsSalesDTO">
+        select od.name,sum(od.number) number
+        from order_detail od,orders o
+        where od.order_id=o.id
+          and o.order_time &gt;#{timeStart}
+          and o.order_time &lt;#{timeEnd}
+          and o.status=#{status}
+        group by od.name
+        order by number desc
+        limit 0,10
+    </select>
 </mapper>
