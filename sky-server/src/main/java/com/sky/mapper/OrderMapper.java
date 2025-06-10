@@ -68,4 +68,6 @@ public interface OrderMapper {
     @Select("select * from orders where status=#{pendingPayment} and order_time<=#{time}")
     List<Orders> getTimeOut(Integer pendingPayment, LocalDateTime time);
 
+    @Select("select sum(amount) from orders where status=#{completed} and order_time>=#{timeStart} and order_time<=#{timeEnd}")
+    Double getByDateAndStatus(LocalDateTime timeStart, LocalDateTime timeEnd, Integer completed);
 }
